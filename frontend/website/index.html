@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chat Client</title>
+
+    <!-- Do we really want the styling here? -->
+    <style>
+        body { 
+            font-family:Arial, Helvetica, sans-serif; 
+            margin:20px; 
+        }
+        
+        #log { 
+            border:1px solid #ccc; 
+            padding:10px; 
+            height:200px; 
+            overflow:auto; 
+        }
+
+        #log p {
+            margin: 3px 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Chat Client</h2>
+
+    Username: <input id="username" type="text">
+    <button>Login</button>
+
+    <div id="log"></div>
+    
+    <script>
+        /**
+         * Connect to the WebSocket -> TCP Bridge
+         * This connects to ws://localhost:8080 which forwards to the TCP server
+         */
+        let ws = new WebSocket("ws://localhost:8080");
+
+        ws.onopen = () => {
+            writeLog('Connected to server bridge');
+        };
+
+        // Show every message from server
+        ws.onmessage = (event) => {
+            writeLog("SERVER → " + event.data);
+        };
+
+        document.getElementById('loginBtn').onclick = () => {
+            const username = document.getElementById('username').value;
+
+            // Build protocol message:
+            // LOGIN {"username":"Alatreon"}
+            const msg = `LOGIN {"username":"${username}"}`;
+
+            ws.send(msg);
+            writeLog(`CLIENT -> ${msg}`);
+        }
+
+        // Add message to the log box
+        const writeLog = (text) => {
+            const log = document.getElementById('log');
+            log.innerHTML += `<p>${text}</p>`;
+            log.scrollTop = log.scrollHeight; // Auto-scroll
+        }
+    </script>
+</body>
+</html>
