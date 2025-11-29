@@ -1,3 +1,7 @@
+# DO NOT FORGET TO GET RID OF THE .gitkeep ONLY ONCE YOU HAVE PUT SOMETHING INSIDE THAT DIRECTORY TO NOT LOSE IT
+
+---
+
 # Simple TCP Chat — README
 
 A beginner-friendly end-to-end project that implements a small client-server protocol using **plain Node.js TCP server** on the backend and **plain HTML/CSS/JavaScript** for the frontend. Because browsers cannot open raw TCP sockets, a tiny WebSocket → TCP bridge is included so the browser client can communicate with the TCP server.
@@ -101,7 +105,3 @@ You should see `WebSocket bridge running on ws://localhost:8080`.
 * Browsers cannot open raw TCP sockets - that’s why the bridge is needed. The bridge simply forwards text messages back and forth.
 * The protocol uses simple text lines consisting of a command followed by a JSON body. Newlines (`\n` or `\r\n`) separate messages.
 * The server code is intentionally simple and synchronous in structure to be easier to read and learn from.
-
----
-
-# DO NOT FORGET TO GET RID OF THE .gitkeep ONLY ONCE YOU HAVE PUT SOMETHING INSIDE THAT DIRECTORY TO NOT LOSE IT
