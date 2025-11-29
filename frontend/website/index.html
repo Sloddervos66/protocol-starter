@@ -26,11 +26,18 @@
     <h2>Chat Client</h2>
 
     Username: <input id="username" type="text">
-    <button>Login</button>
+    <button id="loginBtn">Login</button>
 
     <div id="log"></div>
     
     <script>
+        // Add message to the log box
+        const writeLog = (text) => {
+            const log = document.getElementById('log');
+            log.innerHTML += `<p>${text}</p>`;
+            log.scrollTop = log.scrollHeight; // Auto-scroll
+        }
+
         /**
          * Connect to the WebSocket -> TCP Bridge
          * This connects to ws://localhost:8080 which forwards to the TCP server
@@ -55,13 +62,6 @@
 
             ws.send(msg);
             writeLog(`CLIENT -> ${msg}`);
-        }
-
-        // Add message to the log box
-        const writeLog = (text) => {
-            const log = document.getElementById('log');
-            log.innerHTML += `<p>${text}</p>`;
-            log.scrollTop = log.scrollHeight; // Auto-scroll
         }
     </script>
 </body>

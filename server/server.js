@@ -15,7 +15,7 @@
  * - Everything is handled manually.
  */
 
-import net, { Socket } from 'net';
+const net = require('net');
 
 // Store list of connected clients
 // We link a socket -> { username }
@@ -30,12 +30,14 @@ const SERVER_VERSION = "1.0.0";
 /**
  * Helper function to send messages in the required format
  * 
- * @param {Socket} socket 
+ * @param {net.Socket} socket 
  * @param {string} type 
  * @param {object} body 
  */
 const send = (socket, type, body) => {
-    socket.write(`${type} ${JSON.stringify(body)}\n`);
+    const msgToWrite = `${type} ${JSON.stringify(body)}`;
+    console.log(`${socket.localAddress}:${socket.localPort} <-- ${msgToWrite}`);
+    socket.write(msgToWrite);
 }
 
 /**
@@ -68,7 +70,7 @@ const server = net.createServer((socket) => {
         const messages = data.toString().split(/\r?\n/).filter(m => m.trim() !== '');
 
         for (const message of messages) {
-            handleMessage(socket, msg);
+            handleMessage(socket, message);
         }
     });
 
@@ -99,7 +101,7 @@ const server = net.createServer((socket) => {
  * Parse a single protocol message
  * Example: LOGIN {"username":"Alatreon"}
  * 
- * @param {Socket} socket 
+ * @param {net.Socket} socket 
  * @param {string} msg 
  * @returns 
  */
@@ -113,8 +115,8 @@ const handleMessage = (socket, msg) => {
         return send(socket, 'PARSE_ERROR', {});
     }
 
-    const command = msg.subString(0, spaceIdx);
-    const payloadStr = msg.subString(spaceIdx + 1);
+    const command = msg.substring(0, spaceIdx);
+    const payloadStr = msg.substring(spaceIdx + 1);
 
     let payload;
 
@@ -129,6 +131,7 @@ const handleMessage = (socket, msg) => {
     // Only LOGIN is implemented, the rest you will have to do
     // Perhaps this could be done better with a switch case when it scales?
     if (command === "LOGIN") {
+        console.log(`${socket.localAddress}:${socket.localPort} --> ${payload}`);
         handleLogin(socket, payload);
     } else {
         // Any other command is unknown
@@ -139,7 +142,7 @@ const handleMessage = (socket, msg) => {
 /**
  * Handle login requests
  * 
- * @param {Socket} socket 
+ * @param {net.Socket} socket 
  * @param {object} param1 
  * @returns 
  */

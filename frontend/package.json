@@ -7,5 +7,8 @@
   },
   "author": "Sloddervos66",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
 }
